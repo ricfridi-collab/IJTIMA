@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEM ELITE ARENA | DR.CHOUIDIRA MOHAMED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- تنسيقات الكود الأول (الاجتماعيات) --- */
+        :root {
+            --gold: #d4af37;
+            --royal-black: #050505;
+            --card-bg: #151515;
+            --paper-bg: #ffffff;
+            --paper-text: #000000;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: var(--royal-black);
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(212,175,55,0.05) 0%, transparent 50%),
+                linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        .amiri { font-family: 'Amiri', serif; }
+        .hidden { display: none !important; }
+
+        /* --- Main Hub (Yugi Style) --- */
+        #main-hub {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding: 20px 15px 100px 15px;
+        }
+
+        .yugi-card {
+            width: 95%;
+            max-width: 380px;
+            height: 130px;
+            cursor: pointer;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: 0.4s;
+            background: var(--card-bg);
+            border: 2px solid #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .yugi-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .card-inner { display: flex; height: 100%; }
+        .card-photo {
+            width: 110px;
+            height: 100%;
+            object-fit: cover;
+            border-left: 1px solid var(--gold);
+        }
+        
+        .card-content {
+            flex: 1;
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-content h2 { 
+            font-size: 1.1rem; 
+            color: var(--gold); 
+            margin: 0 0 5px 0; 
+            text-shadow: 0 0 5px rgba(212,175,55,0.3);
+        }
+        .card-content p { font-size: 0.8rem; color: #aaa; margin: 0; }
+
+        /* --- Activation Screen --- */
+        #activation-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5,5,5,0.98);
+            z-index: 3000;
+            display: flex; /* افتراضي الظهور */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .activation-box {
+            background: #1a1a1a;
+            border: 2px solid var(--gold);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .code-input {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid #444;
+            color: var(--gold);
+            font-size: 1.2rem;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-family: monospace;
+            letter-spacing: 2px;
+            direction: ltr;
+        }
+        .code-input:focus { border-color: var(--gold); outline: none; }
+
+        .activate-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.2s;
+        }
+        .activate-btn:hover { background: #fff; }
+        .activate-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
+
+        /* --- Overlays --- */
+        .full-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 15px 20px 15px;
+            overflow-y: auto;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: #c0392b;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 3px;
+            z-index: 2001;
+        }
+
+        /* --- Quiz UI (For History/Geo Challenges) --- */
+        .active-card {
+            background: var(--card-bg);
+            width: 95%;
+            max-width: 500px;
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+            text-align: center;
+        }
+        
+        .life-points-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .orb {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #222;
+            border: 1px solid #444;
+        }
+        .orb.active { background: #27ae60; box-shadow: 0 0 8px #27ae60; }
+        .orb.lost { background: #c0392b; box-shadow: 0 0 8px #c0392b; }
+
+        .opt-btn {
+            display: block;
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: 1px solid #444;
+            padding: 12px;
+            margin: 8px 0;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-align: right;
+            transition: 0.2s;
+            border-radius: 5px;
+        }
+        .opt-btn:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
+        .opt-btn.correct { background: #27ae60; border-color: #27ae60; }
+        .opt-btn.wrong { background: #c0392b; border-color: #c0392b; }
+
+        /* --- Exam Grid Style --- */
+        .exam-grid-container {
+            width: 100%;
+            max-width: 600px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        @media (min-width: 600px) {
+            .exam-grid-container {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+
+        .exam-box {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 10px 5px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .exam-box:hover {
+            border-color: var(--gold);
+            background: #222;
+            transform: translateY(-3px);
+        }
+
+        .exam-box.solved {
+            border-color: #27ae60;
+            background: #1a2e1a;
+        }
+
+        .exam-box i {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .exam-box.solved i {
+            color: #27ae60;
+        }
+
+        .exam-box span {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #ccc;
+        }
+
+        .solved-badge {
+            background: var(--gold);
+            color: #000;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        /* --- Memory Tips List --- */
+        .tips-list {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tip-card {
+            background: #1a1a1a;
+            border-right: 4px solid var(--gold);
+            padding: 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+            cursor: default;
+        }
+        
+        .tip-card:hover {
+            background: #222;
+            transform: translateX(-5px);
+        }
+
+        .tip-card h4 {
+            margin: 0 0 5px 0;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        /* --- Footer --- */
+        .royal-footer {
+            position: fixed;
+            bottom: 0; width: 100%;
+            background: #000;
+            border-top: 2px solid var(--gold);
+            padding: 8px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+        .ticker { display: inline-block; padding-left: 100%; animation: slide 20s linear infinite; }
+        .gold-text { color: var(--gold); font-weight: bold; font-size: 0.8rem; }
+        @keyframes slide { from { transform: translateX(0); } to { transform: translateX(100%); } }
+
+        /* --- Modal --- */
+        .modal {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            border: 2px solid var(--gold);
+            padding: 30px;
+            border-radius: 10px;
+            z-index: 4000;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9);
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal h2 { color: var(--gold); margin-top: 0; }
+        .modal-btn {
+            background: var(--gold); color: black;
+            border: none; padding: 10px 25px;
+            font-weight: bold; cursor: pointer;
+            margin-top: 15px; border-radius: 5px;
+        }
+
+        /* ----------------------------------------------------
+           NEW: Interactive Paper Styles
+           ---------------------------------------------------- */
+        #paper-overlay {
+            background: #333; 
+        }
+
+        .official-paper {
+            background: var(--paper-bg);
+            color: var(--paper-text);
+            width: 100%;
+            max-width: 210mm; 
+            min-height: 297mm; 
+            padding: 20mm;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            font-family: 'Amiri', serif; 
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .paper-header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .paper-header h1 { margin: 5px 0; font-size: 1.4rem; }
+        .paper-header h2 { margin: 5px 0; font-size: 1.2rem; font-weight: bold; }
+        .paper-header h3 { margin: 5px 0; font-size: 1.1rem; text-decoration: underline; }
+        .paper-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .paper-body { flex: 1; line-height: 1.8; font-size: 1.1rem; }
+        
+        .section-title {
+            background: #eee;
+            padding: 5px 10px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            border-right: 5px solid #000;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+        }
+
+        .question-block { margin-bottom: 20px; }
+        .question-text { font-weight: bold; margin-bottom: 8px; }
+
+        .option-box {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 4px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-box:hover { background-color: #f0f0f0; }
+        
+        .option-box.selected {
+            background-color: #e3f2fd;
+            border-color: #2196f3;
+            font-weight: bold;
+            box-shadow: 0 0 0 1px #2196f3;
+        }
+
+        .option-box.correct {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724 !important;
+            pointer-events: none;
+        }
+        .option-box.wrong {
+            background-color: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24 !important;
+            pointer-events: none;
+        }
+        .option-box.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .watermark {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        .paper-controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-submit { background: #27ae60; color: #fff; font-size: 1.1rem; }
+        .btn-submit:hover { background: #219150; }
+        .btn-print { background: #fff; color: #000; border: 1px solid #ccc; }
+
+        .score-display {
+            background: #000;
+            color: var(--gold);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            max-width: 210mm;
+            margin-top: 10px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        /* Toast */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: #333; color: #fff;
+            text-align: center; border-radius: 5px; padding: 16px;
+            position: fixed; z-index: 6000; left: 50%; bottom: 30px;
+            transform: translateX(-50%); border-right: 4px solid var(--gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+    </style>
+</head>
+<body>
+
+    <!-- Activation Screen -->
+    <section id="activation-screen">
+        <div class="activation-box">
+            <i class="fas fa-fingerprint" style="font-size: 3rem; color: var(--gold); margin-bottom: 15px;"></i>
+            <h2 class="amiri" style="margin-bottom: 20px;">ادخل كود التفعيل </h2>
+            <input type="text" id="code-input" class="code-input" placeholder="CODE" maxlength="12">
+            <button id="btn-activate" class="activate-btn" onclick="verifyCode()">دخول الساحة</button>
+            <p id="msg" style="color: #e74c3c; font-size: 0.8rem; margin-top: 10px; min-height: 15px;"></p>
+        </div>
+    </section>
+
+    <!-- Main Menu -->
+    <main id="main-hub" class="hidden">
+        
+        <!-- 1. History (Original) -->
+        <div class="yugi-card" onclick="startQuiz('history', 20)">
+            <div class="card-inner">
+                <img src="https://images.unsplash.com/photo-1572375992501-4b0892d50c69?w=500" class="card-photo">
+                <div class="card-content">
+                    <h2 class="amiri">تحدي التاريخ</h2>
+                    <p>اسئلة متنوعة (مقاومة، ثورة، مفاوضات)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Geography (Original) -->
+        <div class="yugi-card" onclick="startQuiz('geo', 20)">
+            <div class="card-inner">
+                <img src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=500" class="card-photo">
+                <div class="card-content">
+                    <h2 class="amiri">تحدي الجغرافيا</h2>
+                    <p>مناخ، تضاريس، اقتصاد، و سكان</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. BEM Test (Original) -->
+        <div class="yugi-card" onclick="startQuiz('all', 50)">
+            <div class="card-inner">
+                <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500" class="card-photo">
+                <div class="card-content">
+                    <h2 class="amiri">المباراة الشاملة</h2>
+                    <p>بنك الأسئلة الكامل (50 سؤال)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Memory Tips (Original) -->
+        <div class="yugi-card" onclick="openMemoryTips()">
+            <div class="card-inner">
+                <div style="width:110px; height:100%; background:var(--gold); display:flex; align-items:center; justify-content:center; border-left:1px solid #000;">
+                    <i class="fas fa-brain" style="font-size:2.5rem; color:#000;"></i>
+                </div>
+                <div class="card-content">
+                    <h2 class="amiri">سر الحفظ القوي</h2>
+                    <p>نصائح عملية و ذهنية</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Exam Generator (INTERACTIVE) -->
+        <div class="yugi-card" onclick="openExamList()">
+            <div class="card-inner">
+                <div style="width:110px; height:100%; background:var(--gold); display:flex; align-items:center; justify-content:center; border-left:1px solid #000;">
+                    <i class="fas fa-file-alt" style="font-size:2.5rem; color:#000;"></i>
+                </div>
+                <div class="card-content">
+                    <h2 class="amiri">نماذج الامتحانات الرسمية</h2>
+                    <p>حل، صحح، واحفظ نقاطك</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Video Review (NEW ADDITION) -->
+        <div class="yugi-card" onclick="window.open('https://www.youtube.com/@prf_mahmoud/playlists', '_blank')">
+            <div class="card-inner">
+                <div style="width:110px; height:100%; background:#FF0000; display:flex; align-items:center; justify-content:center; border-left:1px solid #000;">
+                    <i class="fab fa-youtube" style="font-size:2.5rem; color:#fff;"></i>
+                </div>
+                <div class="card-content">
+                    <h2 class="amiri">المراجعة بالفيديو</h2>
+                    <p>شرح الدروس مع الأستاذ محمود</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Strategy (Original) -->
+        <div class="yugi-card" onclick="openStrategy()">
+            <div class="card-inner">
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500" class="card-photo">
+                <div class="card-content">
+                    <h2 class="amiri">استراتيجية النجاح</h2>
+                    <p>خطط التحضير للامتحان</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Quiz Overlay (For fast challenges) -->
+    <section id="quiz-overlay" class="full-overlay hidden">
+        <button class="back-btn" onclick="quitQuiz()">انسحاب</button>
+        <div class="active-card">
+            <div id="life-bar" class="life-points-bar"></div>
+            <span id="q-counter" style="color:var(--gold); font-size:0.8rem; font-weight:bold;"></span>
+            <h3 id="q-text" class="amiri" style="font-size:1.2rem; margin:15px 0;"></h3>
+            <div id="answers-area"></div>
+        </div>
+    </section>
+
+    <!-- Memory Tips Overlay -->
+    <section id="memory-overlay" class="full-overlay hidden">
+        <button class="back-btn" onclick="closeOverlay('memory-overlay')">عودة</button>
+        <div class="active-card">
+            <h2 class="amiri" style="color:var(--gold); margin-bottom: 20px;">نصائح الحفظ السريع</h2>
+            <div id="tips-container" class="tips-list"></div>
+        </div>
+    </section>
+
+    <!-- Exam Grid Overlay (Selection) -->
+    <section id="exam-overlay" class="full-overlay hidden">
+        <button class="back-btn" onclick="closeOverlay('exam-overlay')">عودة</button>
+        <div class="active-card" style="width: 95%; max-width: 800px;">
+            <h2 class="amiri" style="color:var(--gold);">نماذج الامتحانات الرسمية</h2>
+            <p style="color:#aaa; margin-bottom: 20px;">حل الامتحانات وترقب نتيجتك</p>
+            <div id="exam-grid" class="exam-grid-container"></div>
+        </div>
+    </section>
+
+    <!-- Paper Overlay (Interactive) -->
+    <section id="paper-overlay" class="full-overlay hidden">
+        <button class="back-btn" onclick="closeOverlay('paper-overlay')">عودة للقائمة</button>
+        <div id="score-banner" class="score-display"></div>
+        <div id="paper-container"></div>
+    </section>
+
+    <!-- Strategy Overlay -->
+    <section id="strategy-overlay" class="full-overlay hidden">
+        <button class="back-btn" onclick="closeOverlay('strategy-overlay')">عودة</button>
+        <div class="active-card">
+            <h2 class="amiri" style="color:var(--gold);">الخطة الذهبية</h2>
+            <p>قسم النجاح</p>
+            <div style="text-align:right; margin-top:20px; line-height:1.6; font-size:0.9rem; color:#ccc;">
+                <p><strong style="color:var(--gold)">1. الصلوات:</strong> المحافظة عليها في وقتها تساعد على التركيز.</p>
+                <p><strong style="color:var(--gold)">2. المراجعة اليومية:</strong> راجع دروسك اليوم بنفس اليوم لتثبيت المعلومة.</p>
+                <p><strong style="color:var(--gold)">3. حل الامتحانات السابقة:</strong> الطريقة المثلى لفهم نمط الأسئلة.</p>
+                <p><strong style="color:var(--gold)">4. الصحة:</strong> النوم الجيد والغذاء الصحي وقود للعقل.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="royal-footer">
+        <div class="ticker">
+            <span class="gold-text">DESIGNED BY DR.CHOUIDIRA MOHAMED • تفادى التكرار • ركز على الفهم • BEM ELITE ARENA 2025</span>
+        </div>
+    </footer>
+
+    <!-- Result Modal (For Quiz only) -->
+    <div id="result-modal" class="modal hidden">
+        <h2 class="amiri">النتيجة النهائية</h2>
+        <div style="font-size:2rem; font-weight:bold; color:var(--gold); margin:10px 0;" id="final-score">0/0</div>
+        <p id="feedback-text"></p>
+        <button class="modal-btn" onclick="document.getElementById('result-modal').classList.add('hidden')">حسناً</button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast">رسالة تنبيه</div>
+
+    <script>
+        /* ==========================================
+           1. نظام الحماية (تم التحديث ليتطابق مع الكود الثاني)
+           الرابط: https://sheetdb.io/api/v1/coepewa2mafyv
+           ========================================== */
+        const SecuritySystem = (function() {
+            'use strict';
+            
+            const _API_URL = "https://sheetdb.io/api/v1/coepewa2mafyv";
+            
+            const CONFIG = {
+                ADMIN_CODES: ["ADMIN-001", "ADMIN-002"], 
+                STORAGE_KEY: "bem_activated_codes",
+                ACTIVATED_FLAG: "bem_activated_global"
+            };
+
+            function getDeviceFingerprint() {
+                return btoa(navigator.userAgent + screen.width + screen.height + navigator.language).slice(0, 30);
+            }
+
+            function cleanString(str) { return str ? str.replace(/\s+/g, '').trim() : ''; }
+            
+            function saveActivation(code) {
+                const history = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || "[]");
+                if (!history.includes(code)) {
+                    history.push(code);
+                    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(history));
+                }
+                localStorage.setItem(CONFIG.ACTIVATED_FLAG, 'true');
+            }
+
+            return {
+                verify: function(inputCode, onSuccess, onError) {
+                    const rawCode = cleanString(inputCode);
+                    if (!rawCode) { onError("الرجاء إدخال الكود"); return; }
+
+                    if (CONFIG.ADMIN_CODES.includes(rawCode)) {
+                        saveActivation(rawCode);
+                        onSuccess("تم الدخول (مسؤول)");
+                        return;
+                    }
+
+                    // الاتصال بالسيرفر (Search)
+                    fetch(`${_API_URL}/search?code=${encodeURIComponent(rawCode)}`)
+                        .then(res => {
+                            if(!res.ok) throw new Error("NetworkError");
+                            return res.json();
+                        })
+                        .then(data => {
+                            if(!data || data.length === 0) throw new Error("NotFound");
+                            const entry = data[0];
+                            const normalize = (s) => s ? s.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() : '';
+                            
+                            if(normalize(entry.code) !== normalize(rawCode)) throw new Error("NotFound");
+
+                            if(!entry.status) {
+                                // الكود جديد -> قفله (استخدام مرة واحدة)
+                                this.lockCode(rawCode, getDeviceFingerprint(), onSuccess, onError);
+                            } else {
+                                throw new Error("CodeUsed");
+                            }
+                        })
+                        .catch(err => {
+                            if(err.message === "NotFound") onError("الكود غير موجود");
+                            else if(err.message === "CodeUsed") onError("الكود مستخدم مسبقاً");
+                            else onError("فشل الاتصال بالإنترنت");
+                        });
+                },
+
+                lockCode: function(code, deviceID, onSuccess, onError) {
+                    fetch(`${_API_URL}/code/${code}`, {
+                        method: 'PATCH',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: { "status": "locked", "device_id": deviceID } })
+                    })
+                    .then(res => {
+                        if(res.ok) { saveActivation(code); onSuccess("تم التفعيل بنجاح"); }
+                        else throw new Error("ServerError");
+                    })
+                    .catch(() => onError("فشل حفظ التفعيل، حاول مرة أخرى"));
+                },
+
+                init: function(callback) {
+                    if(localStorage.getItem(CONFIG.ACTIVATED_FLAG) === 'true') {
+                        callback();
+                        return true;
+                    }
+                    return false;
+                }
+            };
+        })();
+
+        /* ==========================================
+           2. ربط الواجهة بنظام الأمان (تم تصحيح الخطأ هنا)
+           ========================================== */
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const screen = document.getElementById('activation-screen');
+            const mainHub = document.getElementById('main-hub');
+
+            // التحقق من التفعيل السابق
+            if(SecuritySystem.init(() => {
+                // المستخدم مفعل بالفعل
+                if(screen) screen.style.display = 'none';
+                if(mainHub) mainHub.classList.remove('hidden');
+            })) {
+                // هذا الفرع يحدث فقط إذا كان init() قد قام بتنفيذ الـ callback
+                if(screen) screen.style.display = 'none';
+                if(mainHub) mainHub.classList.remove('hidden');
+            } else {
+                // المستخدم غير مفغل
+                if(screen) screen.style.display = 'flex';
+                if(mainHub) mainHub.classList.add('hidden');
+            }
+        });
+
+        function verifyCode() {
+            const input = document.getElementById('code-input').value;
+            const btn = document.getElementById('btn-activate');
+            const msg = document.getElementById('msg');
+            
+            if(!input) { msg.textContent = "الرجاء إدخال الكود"; return; }
+            
+            btn.disabled = true;
+            btn.textContent = "جاري التحقق...";
+            msg.textContent = "";
+
+            SecuritySystem.verify(
+                input,
+                (successMsg) => { // Success
+                    msg.textContent = successMsg;
+                    msg.style.color = "#27ae60"; // Success color
+                    setTimeout(() => {
+                        showHub();
+                    }, 1000);
+                },
+                (errorMsg) => { // Error
+                    msg.textContent = errorMsg;
+                    msg.style.color = "#e74c3c"; // Error color
+                    btn.disabled = false;
+                    btn.textContent = "دخول الساحة";
+                }
+            );
+        }
+
+        /* ==========================================
+           3. منطق التطبيق (أسئلة الاجتماعيات)
+           ========================================== */
+
+        const QUESTIONS = {
+            history: [
+                { q: "ما هو التاريخ الدقيق لسقوط العاصمة الجزائرية بيد الاحتلال الفرنسي؟", o: ["5 جويلية 1830", "5 جويلية 1962", "1 نوفمبر 1954", "8 ماي 1945"], a: 0 },
+                { q: "متى اندلعت الثورة التحريرية المباركة؟", o: ["1 نوفمبر 1954", "5 جويلية 1962", "20 أوت 1955", "8 ماي 1945"], a: 0 },
+                { q: "في أي تاريخ عقد مؤتمر الصومام التاريخي؟", o: ["20 أوت 1956", "5 جويلية 1962", "1 نوفمبر 1954", "1955"], a: 0 },
+                { q: "متى توقفت العمليات العسكرية رسمياً (اتفاقيات إيفيان)؟", o: ["19 مارس 1962", "5 جويلية 1962", "1 نوفمبر 1954", "20 أوت 1956"], a: 0 },
+                { q: "متى عقدت معاهدة التافنة بين الأمير عبد القادر والفرنسيين؟", o: ["30 ماي 1837", "1834", "1847", "1830"], a: 0 },
+                { q: "ما هي معركة التي أدت لتحطم الأسطول الجزائري وأضعاف الدولة؟", o: ["معركة نافارين", "معركة سطاوالي", "معركة الحراش", "معركة المقري"], a: 0 },
+                { q: "ماهو تاريخ وقائع 8 ماي 1945؟", o: ["مجازر سطيف وقالمة وخراطة", "اندلاع الثورة", "استقلال الجزائر", "مؤتمر الصومام"], a: 0 },
+                { q: "متى تأسست حكومة الجزائر المؤقتة (GPRA)؟", o: ["19 سبتمبر 1958", "1954", "1962", "1956"], a: 0 },
+                { q: "في أي سنة انتهت مقاومة الأمير عبد القادر؟", o: ["1847", "1830", "1837", "1850"], a: 0 },
+                { q: "متى عقدت معاهدة دي بورمون (الاستسلام)؟", o: ["5 جويلية 1830", "1837", "1847", "1830"], a: 0 },
+                { q: "من هو قائد المقاومة في الغرب الجزائري (1832-1847)؟", o: ["الأمير عبد القادر", "الشيخ بوعمامة", "الاحرار بن يحي", "المقراني"], a: 0 },
+                { q: "من قاد هجومات الشمال القسنطيني الشهيرة (1955)؟", o: ["العقيد يوسف زيردود", "العقيد عميروش", "العقيد العربي بن مهيدي", "سي محمد بوضياف"], a: 0 },
+                { q: "من هو مؤسس جمعية العلماء المسلمين الجزائريين؟", o: ["الشيخ عبد الحميد بن باديس", "البشير الإبراهيمي", "مالك بن نبي", "مصالي الحاج"], a: 0 },
+                { q: "من الزعيم الذي طالب بالاندماج في فرنسا (التيار الاندماجي)؟", o: ["فرحات عباس", "مصالي الحاج", "بن باديس", "مصطفى بن بولعيد"], a: 0 },
+                { q: "من قائد مقاومة لالة فاطمة نسومر؟", o: ["الشريف بوبغلة", "الأمير عبد القادر", "محمد المقراني", "الشيخ بوعمامة"], a: 0 },
+                { q: "من هو أول رئيس للجمهورية الجزائرية المستقلة؟", o: ["أحمد بن بلة", "هواري بومدين", "الشاذلي بن جديد", "محمد بوضياف"], a: 0 },
+                { q: "ما هي المعاهدة التي أنهت مرحلة المقاومة الشعبية المنظمة للأمير عبد القادر؟", o: ["معاهدة التافنة", "معاهدة دي بورمون", "اتفاقيات إيفيان", "معاهدة نافارين"], a: 0 },
+                { q: "ماذا قرر مؤتمر الصومام بخصوص القيادة؟", o: ["تقرير مبدأ القيادة الجماعية", "قيادة فردية", "قيادة عسكرية فقط", "القيادة للحزب"], a: 0 },
+                { q: "كم عدد الولايات التي قررها مؤتمر الصومام؟", o: ["6 ولايات", "4 ولايات", "5 ولايات", "7 ولايات"], a: 0 },
+                { q: "ما هو السبب الرئيسي لتأخر فرنسا في احتلال الجزائر رغم تحطم الأسطول؟", o: ["ضعف فرنسا داخليا ومشاكلها", "قوة الجزائر الاقتصادية", "رفض الدول الأوروبية", "قلة الجنود"], a: 0 },
+                { q: "ماذا يسمى النشاط الدبلوماسي الذي رافق الثورة التحريرية؟", o: ["الكفاح السياسي والدبلوماسي", "الكفاح المسلح فقط", "المقاطعة الاقتصادية", "الجهاد"], a: 0 },
+                { q: "ما هي المنظمة الإرهابية التي أسسها المستوطنون لعرقلة الاستقلال؟", o: ["منظمة الجيش السري (OAS)", "الجبهة الوطنية", "الحركة الوطنية", "حزب الشعب"], a: 0 },
+                { q: "ما هو 'مشروع قسنطينة'؟", o: ["مشروع استعماري لامتصاص غضب الجزائريين وتنصيرهم", "مشروع زراعي", "مشروع سكاني", "مشروع ثقافي"], a: 0 },
+                { q: "ما هو 'خط شال'؟", o: ["خط كهربائي عازل لمنع تسلل الثوار من تونس", "خط سكة حديدية", "حدود دولية", "مخطط زراعي"], a: 0 },
+                { q: "متى تأسس نجم شمال إفريقيا؟", o: ["1926", "1954", "1830", "1945"], a: 0 },
+                { q: "ما هو الهدف من مؤتمر باندونغ 1955؟", o: ["الدعم الدولي للقضية الجزائرية وتدويلها", "محاربة الاستعمار فقط", "توقيع معاهدات تجارية", "مقاطعة فرنسا"], a: 0 },
+                { q: "ماذا يمثل يوم 5 جويلية 1962؟", o: ["عيد الاستقلال والشباب", "يوم الشهداء", "عيد النصر", "عنصر الأرض"], a: 0 },
+                { q: "من هو مؤسس حركة انتصار الحريات الديمقراطية؟", o: ["فرحات عباس", "مصالي الحاج", "بن باديس", "العربي بن مهيدي"], a: 0 },
+                { q: "ما هي 'الهجومات الخمسية'؟", o: ["هجومات 20 أوت 1955 بالشمال القسنطيني", "معارك 1954", "حرب الخنادق", "مخطط شال"], a: 0 },
+                { q: "لماذا تعتبر الثورة الجزائرية ثورة فريدة؟", o: ["لأنها جمعت بين الكفاح المسلح والسياسي والدبلوماسي", "لأنها قصيرة", "لأنها لم يشارك فيها سوى الرجال", "لأنها كانت سلمية تماما"], a: 0 },
+                { q: "أين تم التوقيع على وقف إطلاق النار؟", o: ["بوداوبن (إيفيان)", "الجزائر العاصمة", "تونس", "القاهرة"], a: 0 }
+            ],
+            geo: [
+                { q: "ما هي الحمادة؟", o: ["هضاب صخرية جيرية تتكون من حصيات", "سهول رملية", "مناطق جبلية", "وديان"], a: 0 },
+                { q: "ما المقصود بالخدمات؟", o: ["كل نشاط يؤدي إلى إنتاج غير مادي (نقل، تجارة، سياحة)", "الصناعة الثقيلة", "الفلاحة", "استخراج المحروقات"], a: 0 },
+                { q: "ما هو الزحف العمراني؟", o: ["توسع المدن على حساب الأراضي الزراعية والخصبة", "زيادة عدد السكان", "الهجرة الريفية", "بناء العمارات"], a: 0 },
+                { q: "ما هو التصحر؟", o: ["تدهور الأرض في المناطق الجافة وشبه الجافة", "جفاف التربة نهائيا", "زيادة الحرارة", "قلة الأمطار"], a: 0 },
+                { q: "ما هو الشط؟", o: ["بحيرة مالحة تتشكل في مناطق منخفضة", "نهر كبير", "جبل مرتفع", "صحراء رملية"], a: 0 },
+                { q: "ما هي التجارة الخارجية؟", o: ["مجموعة العمليات التجارية مع الخارج (تصدير واستيراد)", "تجارة داخلية", "السوق المحلي", "الاقتصاد المنهاري"], a: 0 },
+                { q: "ما هي كثافة السكان؟", o: ["عدد السكان في الكيلومتر المربع الواحد", "معدل المواليد", "عدد السكان الكلي", "الهجرة"], a: 0 },
+                { q: "ما هو الانفجار الديمغرافي؟", o: ["الزيادة الهائلة والسريعة للسكان", "الحروب", "الكوارث", "التنمية"], a: 0 },
+                { q: "ما هي التنمية المستدامة؟", o: ["تنمية تلبي حاجيات الحاضر دون الإضرار بمستقبل الأجيال", "تنمية صناعية سريعة", "استغلاف الموارد فقط", "الحد من التطور"], a: 0 },
+                { q: "لماذا تتناقص كمية الأمطار من الشمال إلى الجنوب في الجزائر؟", o: ["بسبب بعدها عن البحر المتوسط ووجود السلاسل الجبلية", "بسبب التصحر", "بسبب الحرارة", "بسبب الرياح"], a: 0 },
+                { q: "لماذا تسمى الأودية في الجزائر بالأودية الكاذبة؟", o: ["لأنها تجف صيفا وتفيض شتاءا بشكل مفاجئ", "لأن مياهها سامة", "لأنها عميقة جدا", "لأنها لا تأخذ اتجاها ثابتا"], a: 0 },
+                { q: "ما علاقة المناخ بالغطاء النباتي؟", o: ["الغطاء النباتي يتأثر بالمطر ودرجة الحرارة", "لا توجد علاقة", "النبات يغير المناخ", "المناخ حار دائما"], a: 0 },
+                { q: "ما هي السلاسل الجبلية التي تؤثر في مناخ الجزائر؟", o: ["الأطلس التلي والأطلس الصحراوي", "الجبال الألبية", "جبال الأطلس الكبرى", "هملايا"], a: 0 },
+                { q: "ما هو النطاق الرطب في الجزائر؟", o: ["الساحل الشمالي (أكثر من 1000 مم)", "الهضاب العليا", "الجنوب", "الصحراء"], a: 0 },
+                { q: "ما هي منطقة 'الرق'؟", o: ["سهل صحراوي شاسع مغطى بالحصى", "منطقة جبلية", "سهل ساحلي", "وادي"], a: 0 },
+                { q: "متى تم تأميم المحروقات في الجزائر؟", o: ["24 فيفري1971", "1962", "1980", "1990"], a: 0 },
+                { q: "ما هي أهمية قطاع المحروقات للاقتصاد الجزائري؟", o: ["المورد الرئيسي للعملة الصعبة والطاقة", "استهلاك محلي فقط", "قطاع ثانوي", "قديم وبدائي"], a: 0 },
+                { q: "ما هو المشروع الصناعي الذي أنشأته الجزائر لتصنيع السيارات؟", o: ["مركبات الرويبة", "بناء الحديد والصلب", "النسيج", "الصناعات الغذائية"], a: 0 },
+                { q: "ما هي مشكلة الاعتماد على المحروقات في الاقتصاد الجزائري؟", o: ["تقلب أسعار البترول عالميا يضر بالاقتصاد", "قلة العمالة", "زيادة الصادرات", "ثبات الأسعار"], a: 0 },
+                { q: "ما هي الثورة الزراعية في الجزائر؟", o: ["إصلاح زراعي سنة 1971", "ثورة مسلحة", "مقاومة الاستعمار", "تصنيع الفلاحة"], a: 0 },
+                { q: "لماذا تعتبر الدولة الجزائرية السدود؟", o: ["لتخزين المياه والري وتوليد الكهرباء", "للسباحة فقط", "للصيد", "لمنع الفيضانات فقط"], a: 0 },
+                { q: "ما هو أكبر خطر يهدد الزراعة في الجنوب الجزائري؟", o: ["التصحر", "فيضانات الأودية", "الجليد", "الحرارة المفرطة"], a: 0 },
+                { q: "ما هو العامل البشري المهم في التنمية؟", o: ["التعليم والتكوين (رأس المال البشري)", "المال فقط", "الأرض فقط", "الآلات"], a: 0 },
+                { q: "ماذا نستنتج من تزايد عدد السكان في الجزائر؟", o: ["الحاجة لمزيد من الخدمات", "قلة العمل", "خطر كبير", "نقص الغذاء"], a: 0 },
+                { q: "ما المقصود بقطاع ما بعد المحروقات؟", o: ["التنويع الاقتصادي بعيدا عن النفط", "حفر آبار جديدة", "بيع النفط", "إغلاق مصافي التكرير"], a: 0 }
+            ]
+        };
+
+        const MEMORY_TIPS = [
+            { title: "قصر الذاكرة", desc: "تخيل بيتك المألوف واربط كل درس بغرفة معينة." },
+            { title: "التكرار المتباعد", desc: "راجع بعد 24 ساعة، ثم أسبوع، ثم شهر." },
+            { title: "الرسم الذهني", desc: "ارسم خريطة للموضوع." },
+            { title: "شرح لغيرك", desc: "اشرح الدرس لصديقك بصوت عالٍ." }
+        ];
+
+        /* --- EXAM PAPER GENERATOR LOGIC (INTERACTIVE) --- */
+        let globalExamPool = [];
+        let currentExamId = null;
+        let currentExamQuestions = []; 
+        let userSelections = {}; 
+
+        function initExamBank() {
+            const all = [...QUESTIONS.history.map(q => ({...q, type:'history'})), 
+                       ...QUESTIONS.geo.map(q => ({...q, type:'geo'}))];
+            for (let i = all.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [all[i], all[j]] = [all[j], all[i]];
+            }
+            globalExamPool = all;
+        }
+
+        function getNextQuestionsForPaper(count) {
+            if (globalExamPool.length < count) initExamBank();
+            return globalExamPool.splice(0, count);
+        }
+
+        function selectOption(qIndex, optIndex, element) {
+            if(document.querySelector('.option-box.correct') || document.querySelector('.option-box.wrong')) return;
+
+            userSelections[qIndex] = optIndex;
+
+            const parent = element.parentElement;
+            const siblings = parent.querySelectorAll('.option-box');
+            siblings.forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function submitExam() {
+            if (Object.keys(userSelections).length < currentExamQuestions.length) {
+                showToast("يرجى الإجابة على جميع الأسئلة قبل التسليم.");
+                return;
+            }
+
+            let score = 0;
+            const pointsPerQ = 5; 
+
+            currentExamQuestions.forEach((q, idx) => {
+                const userAns = userSelections[idx];
+                const correctAns = q.a;
+                const optionsContainer = document.getElementById(`q-options-${idx}`);
+                const options = optionsContainer.querySelectorAll('.option-box');
+
+                options.forEach((opt, optIdx) => {
+                    opt.classList.add('disabled'); 
+                    if (optIdx === correctAns) {
+                        opt.classList.add('correct'); 
+                    } else if (optIdx === userAns && userAns !== correctAns) {
+                        opt.classList.add('wrong'); 
+                    }
+                });
+
+                if (userAns === correctAns) score += pointsPerQ;
+            });
+
+            const scores = JSON.parse(localStorage.getItem('bem_exam_scores') || '{}');
+            scores[currentExamId] = score;
+            localStorage.setItem('bem_exam_scores', JSON.stringify(scores));
+
+            const banner = document.getElementById('score-banner');
+            banner.innerHTML = `النتيجة النهائية: <span style="color:${score >= 10 ? '#27ae60' : '#c0392b'}">${score}/20</span>`;
+            banner.style.display = 'block';
+
+            document.getElementById('submit-btn').style.display = 'none';
+        }
+
+        function generateOfficialPaper(examId) {
+            const scores = JSON.parse(localStorage.getItem('bem_exam_scores') || '{}');
+            if (scores[examId] !== undefined) {
+                if(!confirm("لقد قمت بحل هذا الامتحان سابقاً وحصلت على " + scores[examId] + "/20. هل تريد إعادته؟")) {
+                    return;
+                }
+            }
+
+            document.getElementById('exam-overlay').classList.add('hidden');
+            document.getElementById('paper-overlay').classList.remove('hidden');
+
+            currentExamId = examId;
+            userSelections = {};
+            document.getElementById('score-banner').style.display = 'none'; 
+
+            currentExamQuestions = getNextQuestionsForPaper(4);
+            
+            const container = document.getElementById('paper-container');
+            const today = new Date().toLocaleDateString('ar-DZ');
+            
+            let html = `
+                <div class="official-paper">
+                    <div class="paper-header">
+                        <h1>الجمهورية الجزائرية الديمقراطية الشعبية</h1>
+                        <h2>وزارة التربية الوطنية</h2>
+                        <h3>موضوع في مادة الاجتماعيات (تاريخ وجغرافيا)</h3>
+                        <div class="paper-meta">
+                            <span>المستوى: الرابعة متوسط</span>
+                            <span>المدة: ساعتان</span>
+                            <span>المعامل: 02</span>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-body">
+                        <div class="question-block">
+                            <p class="question-text">التعليمة: أجب عن جميع الأسئلة التالية بوضوح وتدقيق.</p>
+                        </div>
+            `;
+
+            currentExamQuestions.forEach((q, index) => {
+                const sectionTitle = q.type === 'history' ? 'الجزء الأول: التاريخ' : 'الجزء الثاني: الجغرافيا';
+                const icon = q.type === 'history' ? '<i class="fas fa-landmark"></i>' : '<i class="fas fa-globe-africa"></i>';
+                
+                if (index === 0 || currentExamQuestions[index-1].type !== q.type) {
+                    html += `<div class="section-title">${sectionTitle} ${icon}</div>`;
+                }
+
+                html += `
+                    <div class="question-block">
+                        <div class="question-text">السؤال ${index + 1}: ${q.q}</div>
+                        <div class="options-grid" id="q-options-${index}">
+                `;
+
+                q.o.forEach((opt, optIndex) => {
+                    html += `
+                        <div class="option-box" onclick="selectOption(${index}, ${optIndex}, this)">
+                            <span style="margin-left:8px; font-weight:bold;">${['أ','ب','ج','د'][optIndex]}</span> 
+                            ${opt}
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+            });
+
+            html += `
+                    </div>
+                    <div class="watermark">
+                        تم توليد هذا الموضوع آلياً بواسطة BEM ELITE ARENA • الرقم: ${examId}
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="paper-controls">
+                    <button id="submit-btn" class="control-btn btn-submit" onclick="submitExam()">
+                        <i class="fas fa-check-double"></i> تسليم وتصحيح الامتحان
+                    </button>
+                    <button class="control-btn btn-print" onclick="window.print()">
+                        <i class="fas fa-print"></i> طباعة
+                    </button>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        /* --- Standard Quiz Logic (For Fast Challenges) --- */
+        let currentQuiz = [];
+        let qIndex = 0;
+        let score = 0;
+        let totalQ = 0;
+
+        function startQuiz(type, count) {
+            document.getElementById('main-hub').classList.add('hidden');
+            document.getElementById('quiz-overlay').classList.remove('hidden');
+            score = 0; qIndex = 0; totalQ = count;
+            updateLifeBar();
+
+            let pool = [];
+            if(type === 'all') pool = [...QUESTIONS.history, ...QUESTIONS.geo];
+            else pool = QUESTIONS[type] || [];
+
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+            }
+            currentQuiz = pool.slice(0, count);
+            loadQuestion();
+        }
+
+        function updateLifeBar() {
+            const bar = document.getElementById('life-bar');
+            bar.innerHTML = '';
+            const displayCount = totalQ > 20 ?20 : totalQ; 
+            for(let i=0; i<displayCount; i++) {
+                let orb = document.createElement('div');
+                orb.className = 'orb active';
+                bar.appendChild(orb);
+            }
+        }
+
+        function loadQuestion() {
+            const q = currentQuiz[qIndex];
+            document.getElementById('q-counter').textContent = `سؤال ${qIndex + 1} / ${totalQ}`;
+            document.getElementById('q-text').textContent = q.q;
+            const area = document.getElementById('answers-area');
+            area.innerHTML = '';
+
+            q.o.forEach((opt, idx) => {
+                let btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.textContent = opt;
+                btn.onclick = () => handleAnswer(idx, btn);
+                area.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(idx, btn) {
+            const correct = currentQuiz[qIndex].a;
+            const btns = document.querySelectorAll('.opt-btn');
+            btns.forEach(b => b.disabled = true);
+
+            if(idx === correct) {
+                btn.classList.add('correct');
+                score++;
+            } else {
+                btn.classList.add('wrong');
+                btns[correct].classList.add('correct');
+            }
+
+            setTimeout(() => {
+                qIndex++;
+                if(qIndex < totalQ) {
+                    loadQuestion();
+                } else {
+                    finishQuiz();
+                }
+            }, 1200);
+        }
+
+        function quitQuiz() {
+            if(confirm("هل أنت متأكد من الانسحاب؟")) {
+                closeOverlay('quiz-overlay');
+            }
+        }
+
+        function finishQuiz() {
+            closeOverlay('quiz-overlay');
+            document.getElementById('result-modal').classList.remove('hidden');
+            document.getElementById('final-score').textContent = `${score}/${totalQ}`;
+            const pct = (score/totalQ)*100;
+            let feedback = pct >= 80 ? "مستوى أسطوري!" : "حاول مرة أخرى يا بطل.";
+            document.getElementById('feedback-text').textContent = feedback;
+        }
+
+        /* --- Memory Tips Logic --- */
+        function openMemoryTips() {
+            document.getElementById('main-hub').classList.add('hidden');
+            document.getElementById('memory-overlay').classList.remove('hidden');
+            const container = document.getElementById('tips-container');
+            container.innerHTML = '';
+            MEMORY_TIPS.forEach((tip) => {
+                const div = document.createElement('div');
+                div.className = 'tip-card';
+                div.innerHTML = `<h4><i class="fas fa-check-circle" style="color:var(--gold)"></i> ${tip.title}</h4><p>${tip.desc}</p>`;
+                container.appendChild(div);
+            });
+        }
+
+        /* --- Exam Grid Logic (UPDATED: Shows Scores) --- */
+        function openExamList() {
+            document.getElementById('main-hub').classList.add('hidden');
+            document.getElementById('exam-overlay').classList.remove('hidden');
+            
+            const grid = document.getElementById('exam-grid');
+            grid.innerHTML = '';
+            
+            const scores = JSON.parse(localStorage.getItem('bem_exam_scores') || '{}');
+
+            for(let i=1; i<=48; i++) {
+                const box = document.createElement('div');
+                box.className = 'exam-box';
+                
+                if (scores[i] !== undefined) {
+                    box.classList.add('solved');
+                    box.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        <span>${i}</span>
+                        <span class="solved-badge">${scores[i]}/20</span>
+                    `;
+                } else {
+                    box.innerHTML = `
+                        <i class="fas fa-file-alt"></i>
+                        <span>${i}</span>
+                    `;
+                }
+
+                box.onclick = () => generateOfficialPaper(i);
+                grid.appendChild(box);
+            }
+        }
+
+        function openStrategy() {
+            document.getElementById('main-hub').classList.add('hidden');
+            document.getElementById('strategy-overlay').classList.remove('hidden');
+        }
+
+        /* --- Shared Utils --- */
+        function showHub() {
+            document.getElementById('activation-screen').classList.add('hidden');
+            document.getElementById('main-hub').classList.remove('hidden');
+        }
+
+        function closeOverlay(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById('main-hub').classList.remove('hidden');
+        }
+
+        // --- Init ---
+        initExamBank(); 
+    </script>
+</body>
+</html>
